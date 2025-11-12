@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  bob-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: bob-agent:latest
+    container_name: bob-agent
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - AGENT_MODEL=${AGENT_MODEL:-claude-sonnet-4}
+      - MAX_TURNS=${MAX_TURNS:-50}
+      - PHOENIX_COLLECTOR_ENDPOINT=http://phoenix:6006
+      - PHOENIX_PROJECT_NAME=${PHOENIX_PROJECT_NAME:-bob-agent}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - NODE_ENV=production
+    ports:
+      - "3000:3000"  # Main agent port (if needed)
+    networks:
+      - bob-network
+    depends_on:
+      - phoenix
+    volumes:
+      # Mount volume for persistent data (optional)
+      - bob-data:/app/data
+    command: ["--goal", "${AGENT_GOAL:-Hello from Bob Agent!}"]
+
+  phoenix:
+    image: arizephoenix/phoenix:latest
+    container_name: bob-phoenix
+    ports:
+      - "6006:6006"  # Phoenix dashboard
+      - "4317:4317"  # OpenTelemetry gRPC
+      - "4318:4318"  # OpenTelemetry HTTP
+    environment:
+      - PHOENIX_WORKING_DIR=/phoenix-data
+    networks:
+      - bob-network
+    volumes:
+      - phoenix-data:/phoenix-data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6006/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  bob-network:
+    driver: bridge
+
+volumes:
+  bob-data:
+    driver: local
+  phoenix-data:
+    driver: local

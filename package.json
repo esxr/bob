@@ -1,0 +1,38 @@
+{
+  "name": "bob_agent_alpha_01",
+  "version": "0.1.0",
+  "description": "Sophisticated AI agent with RL-based learning, multi-layered memory, and full observability",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/index.ts",
+    "dev": "ts-node src/index.ts",
+    "clean": "rm -rf dist",
+    "test": "echo \"Tests not implemented yet\" && exit 0"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "reinforcement-learning",
+    "memory",
+    "observability",
+    "claude",
+    "mcp"
+  ],
+  "author": "Bob Agent Team",
+  "license": "MIT",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.1.37",
+    "@modelcontextprotocol/sdk": "^1.21.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

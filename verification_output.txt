@@ -1,0 +1,58 @@
+========================================
+BOB AGENT ALPHA 01 - VERIFICATION SCRIPT
+========================================
+
+1. Checking Python version...
+[0;32m✓[0m Python 3.12 detected: Python 3.12.11
+
+2. Verifying REAL Python dependencies...
+[0;32m✓[0m mem0ai installed: 1.0.0
+[0;32m✓[0m arize-phoenix installed: 12.12.0
+[0;32m✓[0m fastmcp installed: 2.13.0.2
+[0;32m✓[0m opentelemetry-api installed
+
+3. Testing Python MCP servers can START...
+[1;33mℹ[0m Testing Memory Server...
+[0;32m✓[0m Memory Server STARTS successfully
+[1;33mℹ[0m Testing Observability Server...
+[0;32m✓[0m Observability Server STARTS successfully
+[1;33mℹ[0m Testing Ability Server...
+[0;32m✓[0m Ability Server STARTS successfully
+
+4. Verifying TypeScript build...
+[0;32m✓[0m TypeScript compiled successfully
+
+5. Checking Node.js dependencies...
+[0;32m✓[0m Claude Agent SDK installed
+[0;32m✓[0m MCP SDK installed
+
+6. Verifying .mcp.json configuration...
+[0;32m✓[0m .mcp.json properly configured
+
+7. Testing MCP server imports in Python...
+[0;32m✓[0m Memory server imports work (fastmcp + mem0)
+[0;32m✓[0m Observability server imports work (fastmcp + phoenix + opentelemetry)
+
+8. Checking environment configuration...
+[0;32m✓[0m .env file exists with ANTHROPIC_API_KEY
+
+========================================
+VERIFICATION COMPLETE
+========================================
+
+[0;32m✓[0m ALL CHECKS PASSED!
+
+The agent uses REAL libraries:
+  • mem0ai for multi-layered memory
+  • arize-phoenix for observability
+  • fastmcp for MCP server framework
+  • opentelemetry for distributed tracing
+
+No mocks. No stubs. REAL production libraries.
+
+To run the agent:
+  npm start -- --goal "Your goal here"
+
+Example:
+  npm start -- --goal "What is 2+2?"
+
