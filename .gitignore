@@ -72,3 +72,4 @@ ENV/
 .claude/
 CLAUDE.md
 .mcp.json
+.playwright-mcp/
