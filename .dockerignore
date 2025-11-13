@@ -25,8 +25,8 @@ ENV/
 env/
 .python-version
 *.egg-info
-dist/
-build/
+# dist/ - commented out to allow TypeScript dist folder
+# build/ - commented out to allow build folder
 *.egg
 
 # IDEs and Editors
@@ -42,9 +42,9 @@ build/
 .env.local
 .env.*.local
 
-# Build outputs
-dist/
-build/
+# Build outputs (commented out for Railway deployment)
+# dist/
+# build/
 *.log
 
 # Test and coverage

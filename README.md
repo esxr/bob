@@ -208,7 +208,7 @@ bob-agent/
 ├── docker-compose.yml                # Local development
 ├── .env.example                      # Environment template
 ├── .dockerignore                     # Docker exclusions
-├── .mcp.json                         # MCP server configuration
+├── mcp.json                          # MCP server configuration
 ├── setup.sh                          # Automated setup script
 ├── verify-setup.sh                   # Setup verification
 ├── package.json                      # Node.js dependencies

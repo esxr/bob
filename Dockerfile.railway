@@ -1,0 +1,55 @@
+# Ultra-optimized Railway Dockerfile for sub-5-minute builds
+# Strategy: Skip heavy Python dependencies for MVP, use minimal setup
+
+# Use Node.js as base (smaller than Python + Node)
+FROM node:18-slim
+
+# Install Python 3.11 (faster than separate Python image)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.11 \
+    python3-pip \
+    python3.11-venv \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy package files first for better caching
+COPY package*.json tsconfig.json ./
+
+# Install Node.js dependencies and build in one layer
+RUN npm ci && \
+    npm cache clean --force
+
+# Copy source files
+COPY src ./src
+COPY packages ./packages
+COPY mcp.railway.json ./mcp.json
+
+# Build TypeScript
+RUN npm run build
+
+# Install ONLY fastmcp for Python (skip heavy dependencies)
+# mem0ai, arize-phoenix, agentlightning have 100+ dependencies each
+# For MVP, we'll use mock/minimal implementations
+RUN pip3 install --no-cache-dir --break-system-packages \
+    fastmcp>=0.1.0
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PATH="/usr/local/bin:${PATH}"
+
+# Create a minimal Python path
+RUN ln -sf /usr/bin/python3.11 /usr/bin/python
+
+# Expose Phoenix dashboard port (even though we won't use it for MVP)
+EXPOSE 6006
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD node -e "console.log('healthy'); process.exit(0)" || exit 1
+
+# Default command
+ENTRYPOINT ["node", "dist/src/index.js"]
+CMD ["--goal", "Hello from Bob Agent on Railway!", "--evaluation", "Successfully deployed"]

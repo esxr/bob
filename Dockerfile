@@ -18,9 +18,8 @@ COPY packages/memory-mcp-server /app/packages/memory-mcp-server
 COPY packages/observability-mcp-server /app/packages/observability-mcp-server
 COPY packages/ability-mcp-server /app/packages/ability-mcp-server
 
-# Install Python packages with cache mount for faster rebuilds
-RUN --mount=type=cache,id=pip-cache,target=/root/.cache/pip \
-    pip install --upgrade pip && \
+# Install Python packages
+RUN pip install --upgrade pip && \
     pip install -e /app/packages/memory-mcp-server && \
     pip install -e /app/packages/observability-mcp-server && \
     pip install -e /app/packages/ability-mcp-server
@@ -33,10 +32,8 @@ WORKDIR /app
 # Copy package files
 COPY package.json package-lock.json ./
 
-# Install Node.js dependencies with cache mount
-RUN --mount=type=cache,id=npm-cache,target=/root/.npm \
-    npm ci --only=production && \
-    npm ci --only=development
+# Install Node.js dependencies
+RUN npm ci
 
 # Copy TypeScript source
 COPY src ./src
@@ -69,7 +66,7 @@ COPY --from=node-builder /app/dist /app/dist
 COPY --from=node-builder /app/package.json /app/package.json
 
 # Copy MCP configuration
-COPY .mcp.json /app/.mcp.json
+COPY mcp.json /app/mcp.json
 
 # Copy source files (needed for MCP servers)
 COPY src /app/src

@@ -73,7 +73,7 @@ end_episode(episode_id="...", success=True, final_reward=1.0)
 
 ## Integration with Bob Agent
 
-Add this server to your `.mcp.json` configuration:
+Add this server to your `mcp.json` configuration:
 
 ```json
 {

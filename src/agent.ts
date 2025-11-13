@@ -15,6 +15,7 @@ import MemoryManager from '../packages/memory';
 import ObservabilityManager from '../packages/observability';
 import AbilityManager from '../packages/ability';
 import { tools } from '../packages/tools';
+import { loadMCPConfig, getMCPServers } from './mcp-config';
 
 export interface AgentOptions {
   apiKey?: string;
@@ -34,11 +35,22 @@ export class BobAgent {
   private maxIterations: number;
   private currentGoal: AgentGoal | null = null;
   private progressLog: AgentProgress[] = [];
+  private mcpServers: Record<string, any> = {};
 
   constructor(options: AgentOptions = {}) {
     this.apiKey = options.apiKey || process.env.ANTHROPIC_API_KEY || '';
     this.model = options.model || 'claude-sonnet-4-20250514';
     this.maxIterations = options.maxIterations || 10;
+
+    // Load MCP configuration from mcp.json (not .mcp.json)
+    // This allows the project to use mcp.json instead of the Claude Agent SDK default
+    try {
+      this.mcpServers = getMCPServers();
+      console.log('[BobAgent] Loaded MCP configuration from mcp.json');
+    } catch (error: any) {
+      console.warn('[BobAgent] Could not load MCP configuration:', error.message);
+      console.warn('[BobAgent] Proceeding without MCP servers');
+    }
 
     // Initialize packages
     this.memory = new MemoryManager(options.memoryUrl);
@@ -51,6 +63,7 @@ export class BobAgent {
     console.log(`  - Observability: ${options.phoenixUrl || 'default'}`);
     console.log(`  - Ability (RL): ${options.lightningUrl || 'default'}`);
     console.log(`  - Max Iterations: ${this.maxIterations}`);
+    console.log(`  - MCP Servers: ${Object.keys(this.mcpServers).length} configured`);
   }
 
   /**

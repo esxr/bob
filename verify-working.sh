@@ -124,15 +124,15 @@ else
 fi
 
 echo ""
-echo "6. Verifying .mcp.json configuration..."
-if [ -f ".mcp.json" ]; then
-    if grep -q "bob-memory" .mcp.json && grep -q "bob-observability" .mcp.json && grep -q "bob-ability" .mcp.json; then
-        pass ".mcp.json properly configured"
+echo "6. Verifying mcp.json configuration..."
+if [ -f "mcp.json" ]; then
+    if grep -q "bob-memory" mcp.json && grep -q "bob-observability" mcp.json && grep -q "bob-ability" mcp.json; then
+        pass "mcp.json properly configured"
     else
-        fail ".mcp.json missing server configurations"
+        fail "mcp.json missing server configurations"
     fi
 else
-    fail ".mcp.json file not found"
+    fail "mcp.json file not found"
 fi
 
 echo ""

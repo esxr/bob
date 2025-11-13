@@ -87,10 +87,10 @@ echo ""
 echo "📋 Checking configuration..."
 echo ""
 
-if [ -f ".mcp.json" ]; then
-    echo "   ✅ .mcp.json exists"
+if [ -f "mcp.json" ]; then
+    echo "   ✅ mcp.json exists"
 else
-    echo "   ❌ .mcp.json not found"
+    echo "   ❌ mcp.json not found"
 fi
 
 if [ -f "IMPLEMENTATION_SUMMARY.md" ]; then

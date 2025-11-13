@@ -113,3 +113,4 @@ export { default as MemoryManager } from '../packages/memory';
 export { default as ObservabilityManager } from '../packages/observability';
 export { default as AbilityManager } from '../packages/ability';
 export { tools } from '../packages/tools';
+export { loadMCPConfig, getMCPServers, mcpConfigExists } from './mcp-config';

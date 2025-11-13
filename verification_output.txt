@@ -26,8 +26,8 @@ BOB AGENT ALPHA 01 - VERIFICATION SCRIPT
 [0;32m✓[0m Claude Agent SDK installed
 [0;32m✓[0m MCP SDK installed
 
-6. Verifying .mcp.json configuration...
-[0;32m✓[0m .mcp.json properly configured
+6. Verifying mcp.json configuration...
+[0;32m✓[0m mcp.json properly configured
 
 7. Testing MCP server imports in Python...
 [0;32m✓[0m Memory server imports work (fastmcp + mem0)

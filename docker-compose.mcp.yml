@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  # Memory MCP Server (Mem0)
+  bob-memory-server:
+    build:
+      context: ./packages/memory-mcp-server
+      dockerfile: Dockerfile
+    container_name: bob-memory-server
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "8001:8001"
+    volumes:
+      # Mount for data persistence
+      - memory-data:/app/data
+    networks:
+      - bob-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+  # Observability MCP Server (Arize Phoenix)
+  bob-observability-server:
+    build:
+      context: ./packages/observability-mcp-server
+      dockerfile: Dockerfile
+    container_name: bob-observability-server
+    environment:
+      - PHOENIX_COLLECTOR_ENDPOINT=http://localhost:6006
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "8002:8002"
+      - "6006:6006"  # Phoenix dashboard
+    volumes:
+      # Mount for traces persistence
+      - observability-data:/app/data
+    networks:
+      - bob-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+  # Ability MCP Server (Agent Lightning)
+  bob-ability-server:
+    build:
+      context: ./packages/ability-mcp-server
+      dockerfile: Dockerfile
+    container_name: bob-ability-server
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "8003:8003"
+    volumes:
+      # Mount for RL training data persistence
+      - ability-data:/app/data
+    networks:
+      - bob-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+networks:
+  bob-network:
+    driver: bridge
+    name: bob-mcp-network
+
+volumes:
+  memory-data:
+    name: bob-memory-data
+  observability-data:
+    name: bob-observability-data
+  ability-data:
+    name: bob-ability-data

@@ -71,7 +71,7 @@ Open this URL in your browser to visualize traces and metrics.
 
 ## Integration with Bob Agent
 
-Add this server to your `.mcp.json` configuration:
+Add this server to your `mcp.json` configuration:
 
 ```json
 {

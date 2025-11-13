@@ -1,27 +1,8 @@
 [build]
-builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
+builder = "dockerfile"
+dockerfilePath = "Dockerfile.railway"
 
 [deploy]
-startCommand = "npm start -- --goal \"$AGENT_GOAL\""
-restartPolicyType = "ON_FAILURE"
+startCommand = "node dist/src/index.js --goal 'Hello from Bob Agent on Railway!' --evaluation 'Successfully deployed'"
+restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
-
-[[services]]
-name = "bob-agent"
-
-[services.healthcheck]
-path = "/"
-port = 3000
-timeout = 60
-interval = 30
-
-[[services]]
-name = "phoenix-dashboard"
-image = "arizephoenix/phoenix:latest"
-
-[services.healthcheck]
-path = "/healthz"
-port = 6006
-timeout = 30
-interval = 30

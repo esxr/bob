@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "bob-memory": {
+      "command": "python3",
+      "args": ["packages/memory-mcp-server/memory_server_minimal.py"],
+      "env": {}
+    },
+    "bob-observability": {
+      "command": "python3",
+      "args": ["packages/observability-mcp-server/observability_server_minimal.py"],
+      "env": {}
+    },
+    "bob-ability": {
+      "command": "python3",
+      "args": ["packages/ability-mcp-server/ability_server_minimal.py"],
+      "env": {}
+    }
+  }
+}

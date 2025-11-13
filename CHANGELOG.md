@@ -80,7 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Configuration
 
-- `.mcp.json`: MCP server configuration for all three servers
+- `mcp.json`: MCP server configuration for all three servers
 - `tsconfig.json`: TypeScript configuration with strict mode
 - `package.json`: Node.js dependencies and scripts
 - `pyproject.toml`: Python package configuration for each MCP server

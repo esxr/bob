@@ -57,7 +57,7 @@ python memory_server.py
 
 ## Integration with Bob Agent
 
-Add this server to your `.mcp.json` configuration:
+Add this server to your `mcp.json` configuration:
 
 ```json
 {
