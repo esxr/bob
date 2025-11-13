@@ -67,3 +67,8 @@ ENV/
 .npm/
 .eslintcache
 .parcel-cache
+
+# Other
+.claude/
+CLAUDE.md
+.mcp.json
