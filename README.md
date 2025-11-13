@@ -1,4 +1,4 @@
-# Bob - Self-replicating AI Agent
+# Bob - Ambient AI Agent
 
 <div>
 
@@ -13,15 +13,21 @@
 
 ---
 
-### What if you could clone yourself? Could you achieve greatness? Well, bob can.
+## Every AI you've used requires you to actively use it in chat
 
-Bob combines elements from vector memory, agentic execution, code creation, and self-improvement, to achieve higher level goals, and improve itself over time.
+### Bob is different. 
+
+[![Install Bob ONCE](https://railway.app/button.svg)](https://railway.app/new/template)
+
+Set your goal, connect your data, and then it goes ambient.
+
+When you need it, it responds instantly. When it spots something you should know, it messages you. When you're busy, it keeps working.
 
 ![bob_concept](./bob.png)
 
-## Immediately Get Bob
+## Clone Bob (Hosted)
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template)
+[![Install Bob with One Click](https://railway.app/button.svg)](https://railway.app/new/template)
 
 Then set the following environment variables in the dashboard:
 ```bash
@@ -30,9 +36,7 @@ OPENAI_API_KEY=your-key
 RAILWAY_ENVIRONMENT=production
 ```
 
-### and your very own Bob is ready at your command!
-
-## Try Out Locally
+## Clone Bob (Local)
 
 ### Docker (Recommended)
 
