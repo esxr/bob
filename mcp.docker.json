@@ -1,0 +1,39 @@
+{
+  "mcpServers": {
+    "bob-memory": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "bob-memory-server",
+        "python",
+        "/app/server/memory_server.py"
+      ],
+      "env": {}
+    },
+    "bob-observability": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "bob-observability-server",
+        "python",
+        "/app/server/observability_server.py"
+      ],
+      "env": {
+        "PHOENIX_COLLECTOR_ENDPOINT": "http://phoenix:6006"
+      }
+    },
+    "bob-ability": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "bob-ability-server",
+        "python",
+        "/app/server/ability_server.py"
+      ],
+      "env": {}
+    }
+  }
+}

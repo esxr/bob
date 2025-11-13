@@ -8,13 +8,22 @@
  * - Tools: MCP-based tool integration
  */
 
-import BobAgent from './agent';
+import dotenv from 'dotenv';
+import path from 'path';
+import BobAgentPlanAct from './agent';
 import { AgentGoal } from './types';
+
+// Load environment variables from .env file in project root
+// Use override: true to ensure .env file takes precedence over shell environment
+dotenv.config({
+  path: path.resolve(__dirname, '../.env'),
+  override: true
+});
 
 async function main() {
   console.log('========================================');
-  console.log('BOB AGENT ALPHA 01');
-  console.log('Intelligent Agent with RL-based Learning');
+  console.log('BOB AGENT ALPHA 01 - PlanAct Architecture');
+  console.log('Intelligent Agent with Plan-Act-Replan Pattern');
   console.log('========================================\n');
 
   // Parse command line arguments
@@ -48,9 +57,9 @@ async function main() {
   console.log('');
 
   // Create agent instance
-  const agent = new BobAgent({
+  const agent = new BobAgentPlanAct({
     apiKey: process.env.ANTHROPIC_API_KEY,
-    maxIterations: 10
+    maxExecutionCycles: 10
   });
 
   // Execute agent
@@ -76,15 +85,6 @@ async function main() {
       console.log(`    Observation: ${step.observation.substring(0, 100)}${step.observation.length > 100 ? '...' : ''}`);
     });
 
-    // Get final statistics
-    const stats = await agent.getStatistics();
-    console.log('\n========================================');
-    console.log('SYSTEM STATISTICS');
-    console.log('========================================');
-    console.log('\nMemory:', JSON.stringify(stats.memory, null, 2));
-    console.log('\nObservability:', JSON.stringify(stats.observability, null, 2));
-    console.log('\nAbility (RL):', JSON.stringify(stats.ability, null, 2));
-
     console.log('\n========================================\n');
 
     process.exit(result.success ? 0 : 1);
@@ -107,8 +107,10 @@ if (require.main === module) {
   });
 }
 
-export { BobAgent };
+export { BobAgentPlanAct };
 export * from './types';
+export * from './types/dag';
+export { ExecutionDAG } from './dag/ExecutionDAG';
 export { default as MemoryManager } from '../packages/memory';
 export { default as ObservabilityManager } from '../packages/observability';
 export { default as AbilityManager } from '../packages/ability';

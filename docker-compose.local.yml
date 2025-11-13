@@ -1,0 +1,158 @@
+services:
+  # Phoenix Dashboard (Arize Observability Platform)
+  phoenix:
+    image: arizephoenix/phoenix:latest
+    container_name: bob-phoenix
+    ports:
+      - "6006:6006"  # Phoenix dashboard
+      - "4317:4317"  # OpenTelemetry gRPC
+      - "4318:4318"  # OpenTelemetry HTTP
+    environment:
+      - PHOENIX_WORKING_DIR=/phoenix-data
+    networks:
+      - bob-network
+    volumes:
+      - phoenix-data:/phoenix-data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6006/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Memory MCP Server (Mem0)
+  bob-memory-server:
+    build:
+      context: ./packages/memory-mcp-server
+      dockerfile: Dockerfile
+    container_name: bob-memory-server
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - memory-data:/app/data
+      # Mount the server script for dynamic execution
+      - ./packages/memory-mcp-server:/app/server
+    networks:
+      - bob-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    # Keep container running for STDIO communication
+    command: ["tail", "-f", "/dev/null"]
+
+  # Observability MCP Server (Arize Phoenix)
+  bob-observability-server:
+    build:
+      context: ./packages/observability-mcp-server
+      dockerfile: Dockerfile
+    container_name: bob-observability-server
+    environment:
+      - PHOENIX_COLLECTOR_ENDPOINT=http://phoenix:6006
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - observability-data:/app/data
+      # Mount the server script for dynamic execution
+      - ./packages/observability-mcp-server:/app/server
+    networks:
+      - bob-network
+    restart: unless-stopped
+    depends_on:
+      - phoenix
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    # Keep container running for STDIO communication
+    command: ["tail", "-f", "/dev/null"]
+
+  # Ability MCP Server (Agent Lightning)
+  bob-ability-server:
+    build:
+      context: ./packages/ability-mcp-server
+      dockerfile: Dockerfile
+    container_name: bob-ability-server
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ability-data:/app/data
+      # Mount the server script for dynamic execution
+      - ./packages/ability-mcp-server:/app/server
+    networks:
+      - bob-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    # Keep container running for STDIO communication
+    command: ["tail", "-f", "/dev/null"]
+
+  # Bob Agent (Main TypeScript Application)
+  bob-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: bob-agent:latest
+    container_name: bob-agent
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - AGENT_MODEL=${AGENT_MODEL:-claude-sonnet-4-5-20250929}
+      - MAX_TURNS=${MAX_TURNS:-10}
+      - PHOENIX_COLLECTOR_ENDPOINT=http://phoenix:6006
+      - PHOENIX_PROJECT_NAME=${PHOENIX_PROJECT_NAME:-bob-agent-local}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - NODE_ENV=production
+    ports:
+      - "3000:3000"  # Main agent port (if needed)
+    networks:
+      - bob-network
+    depends_on:
+      phoenix:
+        condition: service_healthy
+      bob-memory-server:
+        condition: service_started
+      bob-observability-server:
+        condition: service_started
+      bob-ability-server:
+        condition: service_started
+    volumes:
+      # Mount Docker socket for docker exec communication with MCP servers
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Mount volume for persistent data
+      - bob-data:/app/data
+      # Mount MCP config for Docker environment
+      - ./mcp.docker.json:/app/mcp.json:ro
+    # Use environment variable or default goal
+    command: >
+      sh -c "node dist/index.js
+      --goal \"${AGENT_GOAL:-Analyze the Bob Agent project structure and summarize the architecture}\"
+      --evaluation \"${AGENT_EVALUATION:-Provides comprehensive project analysis}\""
+    # Uncomment to keep container running for interactive use
+    # command: ["tail", "-f", "/dev/null"]
+
+networks:
+  bob-network:
+    driver: bridge
+    name: bob-local-network
+
+volumes:
+  bob-data:
+    name: bob-local-data
+  phoenix-data:
+    name: bob-local-phoenix-data
+  memory-data:
+    name: bob-local-memory-data
+  observability-data:
+    name: bob-local-observability-data
+  ability-data:
+    name: bob-local-ability-data

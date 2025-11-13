@@ -35,8 +35,9 @@ COPY package.json package-lock.json ./
 # Install Node.js dependencies
 RUN npm ci
 
-# Copy TypeScript source
+# Copy TypeScript source and packages
 COPY src ./src
+COPY packages ./packages
 COPY tsconfig.json ./
 
 # Build TypeScript

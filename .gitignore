@@ -73,3 +73,4 @@ ENV/
 CLAUDE.md
 .mcp.json
 .playwright-mcp/
+notepad/
