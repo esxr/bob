@@ -1,6 +1,6 @@
 # Dependencies
 node_modules/
-package-lock.json
+# package-lock.json - REMOVED: needed for Railway deployment
 yarn.lock
 pnpm-lock.yaml
 
