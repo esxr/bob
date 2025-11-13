@@ -210,7 +210,6 @@ bob-agent/
 ├── .dockerignore                     # Docker exclusions
 ├── mcp.json                          # MCP server configuration
 ├── setup.sh                          # Automated setup script
-├── verify-setup.sh                   # Setup verification
 ├── package.json                      # Node.js dependencies
 ├── tsconfig.json                     # TypeScript config
 ├── src/
@@ -222,6 +221,12 @@ bob-agent/
 │   ├── observability-mcp-server/     # Python Observability Server (Phoenix)
 │   ├── ability-mcp-server/           # Python Ability Server (Agent Lightning)
 │   └── tools/                        # Sample MCP tools
+├── tests/
+│   ├── python/e2e/                   # Python end-to-end tests
+│   ├── typescript/integration/       # TypeScript integration tests
+│   ├── scripts/                      # Test scripts and verification
+│   ├── outputs/                      # Test outputs and logs
+│   └── README.md                     # Test documentation
 └── docs/
     ├── ARCHITECTURE.md               # System architecture
     ├── DEPLOYMENT.md                 # Deployment guide
@@ -268,18 +273,35 @@ python -c "from packages.memory_mcp_server import memory_server; print(memory_se
 
 ### Testing
 
-```bash
-# Test all MCP servers
-./verify-setup.sh
+All tests are organized in the `tests/` directory:
 
-# Test individual servers
-python packages/memory-mcp-server/memory_server.py
-python packages/observability-mcp-server/observability_server.py
-python packages/ability-mcp-server/ability_server.py
-
-# Run agent tests
-npm test
 ```
+tests/
+├── python/e2e/          # End-to-end Python MCP server tests
+├── typescript/integration/  # TypeScript integration tests
+├── scripts/             # Verification and setup scripts
+└── outputs/             # Test outputs and logs
+```
+
+```bash
+# Run all tests
+npm test
+
+# Run individual test suites
+npm run test:verify      # Verify complete setup and working state
+npm run test:setup       # Check installation status
+npm run test:python      # Run Python MCP server E2E tests
+npm run test:typescript  # Run TypeScript integration tests
+npm run test:mcp-servers # Docker-based MCP server tests
+
+# Run specific test files
+.venv/bin/python tests/python/e2e/test_memory_server.py
+.venv/bin/python tests/python/e2e/test_observability_server.py
+.venv/bin/python tests/python/e2e/test_ability_server.py
+ts-node tests/typescript/integration/test-mcp.ts
+```
+
+See [tests/README.md](tests/README.md) for detailed test documentation.
 
 ### Building
 

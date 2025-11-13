@@ -9,7 +9,12 @@
     "start": "ts-node src/index.ts",
     "dev": "ts-node src/index.ts",
     "clean": "rm -rf dist",
-    "test": "echo \"Tests not implemented yet\" && exit 0"
+    "test": "npm run test:verify && npm run test:python && npm run test:typescript",
+    "test:verify": "bash tests/scripts/verify-working.sh",
+    "test:setup": "bash tests/scripts/verify-setup.sh",
+    "test:python": ".venv/bin/python tests/python/e2e/test_memory_server.py && .venv/bin/python tests/python/e2e/test_observability_server.py && .venv/bin/python tests/python/e2e/test_ability_server.py",
+    "test:typescript": "ts-node tests/typescript/integration/test-mcp.ts",
+    "test:mcp-servers": "bash tests/scripts/test-mcp-servers.sh"
   },
   "keywords": [
     "ai",
