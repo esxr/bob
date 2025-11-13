@@ -24,7 +24,11 @@ export class MemoryManager {
   private client: Client | null = null;
   private connected: boolean = false;
 
-  constructor(private serverPath: string = 'packages/memory-mcp-server/memory_server.py') {
+  constructor(
+    private serverPath: string = process.env.RAILWAY_ENVIRONMENT
+      ? 'packages/memory-mcp-server/memory_server_minimal.py'
+      : 'packages/memory-mcp-server/memory_server.py'
+  ) {
     // Connection will be established lazily
   }
 
@@ -37,8 +41,11 @@ export class MemoryManager {
     }
 
     try {
+      // Use python3 for Railway deployment, .venv/bin/python for local dev
+      const pythonCommand = process.env.RAILWAY_ENVIRONMENT ? 'python3' : '.venv/bin/python';
+
       const transport = new StdioClientTransport({
-        command: '.venv/bin/python',
+        command: pythonCommand,
         args: [this.serverPath],
       });
 

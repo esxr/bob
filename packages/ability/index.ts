@@ -35,7 +35,11 @@ export class AbilityManager {
   private connected: boolean = false;
   private currentEpisodeId: string | null = null;
 
-  constructor(private serverPath: string = 'packages/ability-mcp-server/ability_server.py') {
+  constructor(
+    private serverPath: string = process.env.RAILWAY_ENVIRONMENT
+      ? 'packages/ability-mcp-server/ability_server_minimal.py'
+      : 'packages/ability-mcp-server/ability_server.py'
+  ) {
     // Connection will be established lazily
   }
 
@@ -48,8 +52,11 @@ export class AbilityManager {
     }
 
     try {
+      // Use python3 for Railway deployment, .venv/bin/python for local dev
+      const pythonCommand = process.env.RAILWAY_ENVIRONMENT ? 'python3' : '.venv/bin/python';
+
       const transport = new StdioClientTransport({
-        command: '.venv/bin/python',
+        command: pythonCommand,
         args: [this.serverPath],
       });
 

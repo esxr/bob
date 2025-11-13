@@ -35,7 +35,11 @@ export class ObservabilityManager {
   private connected: boolean = false;
   private currentTraceId: string | null = null;
 
-  constructor(private serverPath: string = 'packages/observability-mcp-server/observability_server.py') {
+  constructor(
+    private serverPath: string = process.env.RAILWAY_ENVIRONMENT
+      ? 'packages/observability-mcp-server/observability_server_minimal.py'
+      : 'packages/observability-mcp-server/observability_server.py'
+  ) {
     // Connection will be established lazily
   }
 
@@ -48,8 +52,11 @@ export class ObservabilityManager {
     }
 
     try {
+      // Use python3 for Railway deployment, .venv/bin/python for local dev
+      const pythonCommand = process.env.RAILWAY_ENVIRONMENT ? 'python3' : '.venv/bin/python';
+
       const transport = new StdioClientTransport({
-        command: '.venv/bin/python',
+        command: pythonCommand,
         args: [this.serverPath],
       });
 
