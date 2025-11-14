@@ -18,6 +18,7 @@ import { AgentGoal, AgentProgress } from './types';
 import MemoryManager from '../packages/memory';
 import ObservabilityManager from '../packages/observability';
 import AbilityManager from '../packages/ability';
+import { executeTool } from './tools';
 import { ExecutionDAG } from './dag/ExecutionDAG';
 import { PlanNode, DAGPlan, DAGSchema } from './types/dag';
 import { getMCPServers } from './mcp-config';
@@ -592,25 +593,30 @@ OUTPUT VALID JSON ONLY (no markdown, no explanations outside JSON):
   }
 
   /**
-   * Direct tool execution (no LLM call)
+   * Direct tool execution (no LLM call) - REAL IMPLEMENTATION
    */
   private async executeDirectToolCall(
     task: PlanNode,
     dependencyResults: Record<string, any>
   ): Promise<any> {
-    // Simulated tool execution for now
-    // In real implementation, this would call actual tools directly
     console.log(
       `    [Direct Tool] ${task.tool} with input:`,
       JSON.stringify(task.toolInput)
     );
+
+    // Execute the tool for real!
+    const toolResult = await executeTool(task.tool || '', task.toolInput || {});
+
+    if (!toolResult.success) {
+      throw new Error(`Tool execution failed: ${toolResult.error}`);
+    }
 
     return {
       method: 'direct_tool',
       tool: task.tool,
       input: task.toolInput,
       dependencies: dependencyResults,
-      result: `Executed ${task.tool}: ${task.action}`,
+      result: toolResult.result,
     };
   }
 

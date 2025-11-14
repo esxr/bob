@@ -47,6 +47,9 @@ export class MemoryManager {
       const transport = new StdioClientTransport({
         command: pythonCommand,
         args: [this.serverPath],
+        env: {
+          ...process.env as Record<string, string>,  // Pass all environment variables including OPENAI_API_KEY
+        },
       });
 
       this.client = new Client({

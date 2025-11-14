@@ -74,3 +74,6 @@ CLAUDE.md
 .mcp.json
 .playwright-mcp/
 notepad/
+
+# Bob Agent workspace (task outputs)
+bob-workspace/

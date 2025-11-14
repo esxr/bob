@@ -16,7 +16,7 @@ import { AgentGoal } from './types';
 // Load environment variables from .env file in project root
 // Use override: true to ensure .env file takes precedence over shell environment
 dotenv.config({
-  path: path.resolve(__dirname, '../.env'),
+  path: path.resolve(__dirname, '../../.env'),  // Go up from dist/src to project root
   override: true
 });
 
